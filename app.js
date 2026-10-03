@@ -570,6 +570,32 @@
     return L.join("\n");
   }
 
+  // Also log the order for the seller dashboard on this device (kasir mode).
+  function recordForSeller(id, date, t) {
+    if (!window.FastrengOrders) return;
+    const c = state.customer;
+    const pay = CFG.payments.find((p) => p.id === state.payment) || CFG.payments[0];
+    window.FastrengOrders.add([
+      {
+        id,
+        at: date.toISOString(),
+        name: c.name.trim(),
+        phone: c.phone.trim(),
+        method: state.method,
+        address: state.method === "delivery" ? c.address.trim() : "",
+        payment: pay.label,
+        note: c.note.trim(),
+        items: t.lines.map((l) => ({ name: l.item.name, unit: l.item.unit, qty: l.qty, price: l.item.price })),
+        subtotal: t.subtotal,
+        shipping: t.shipping,
+        discount: t.discount,
+        total: t.total,
+        status: "baru",
+        source: "device",
+      },
+    ]);
+  }
+
   function waLink(text) {
     const num = String(CFG.store.whatsapp).replace(/\D/g, "");
     return `https://wa.me/${num}?text=${encodeURIComponent(text)}`;
@@ -596,6 +622,7 @@
     });
     state.history = state.history.slice(0, 20);
     save();
+    recordForSeller(id, now, t);
 
     window.open(lastWaUrl, "_blank", "noopener");
     $("#doneId").textContent = id;

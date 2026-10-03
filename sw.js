@@ -1,11 +1,15 @@
 // Offline cache for the Fastreng app shell. Bump VERSION after changing files.
-const VERSION = "fastreng-v1";
+const VERSION = "fastreng-v2";
 const ASSETS = [
   "./",
   "index.html",
   "styles.css",
   "config.js",
   "app.js",
+  "orders.js",
+  "admin.html",
+  "admin.css",
+  "admin.js",
   "manifest.webmanifest",
   "assets/logo.png",
   "assets/icons/icon-192.png",

@@ -14,6 +14,20 @@ daftar belanja yang rapi beserta total harga langsung terkirim ke WhatsApp penju
 - Riwayat pesanan + tombol "Pesan Lagi", status toko Buka/Tutup, keranjang & data tersimpan otomatis.
 - Bisa di-install ke HP (PWA) dan tetap bisa dibuka offline.
 
+## Dashboard Penjual (`admin.html`)
+Buka lewat halaman **Info → Dashboard Penjual**, masukkan PIN (default `1234`, ganti di `config.js`).
+
+- Ringkasan omzet, jumlah pesanan, rata-rata per pesanan, porsi terjual + perbandingan periode sebelumnya.
+- Grafik omzet per hari/jam, menu terlaris, jam ramai, proporsi diantar/ambil & metode bayar, pelanggan teratas.
+- Daftar pesanan dengan status (Baru / Diproses / Selesai / Batal) dan tombol **Kabari Pembeli** via WA.
+- Unduh Excel (CSV), cadangan & pulihkan (JSON) untuk pindah HP.
+
+**Penting — data lokal:** data tersimpan di browser perangkat penjual. Pesanan dari HP pembeli
+masuk ke WA, bukan ke HP penjual, jadi cara mencatatnya:
+1. **Tempel Pesanan dari WA** — salin pesan pesanan di WhatsApp lalu tempel; otomatis terbaca (bisa banyak sekaligus, duplikat dilewati).
+2. **Input Manual** — untuk pesanan telepon / beli langsung.
+3. Pesanan yang dibuat dari halaman toko **di HP penjual sendiri** (mode kasir) tercatat otomatis.
+
 ## Mengatur toko
 Semua pengaturan ada di **`config.js`**:
 - `store.whatsapp` — **ganti dengan nomor WA penjual** (format `628xxxxxxxxxx`, tanpa `+`/`0`).

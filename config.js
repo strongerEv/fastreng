@@ -21,6 +21,10 @@ window.FASTRENG_CONFIG = {
     instagram: "fastcireng",
   },
 
+  // PIN untuk membuka Dashboard Penjual (admin.html). GANTI sebelum dipakai.
+  // Catatan: ini hanya kunci sederhana di perangkat, bukan pengaman server.
+  admin: { pin: "1234" },
+
   delivery: {
     fee: 8000, // ongkir flat
     freeShippingMin: 75000, // gratis ongkir mulai subtotal ini (0 = nonaktif)

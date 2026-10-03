@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Dashboard Penjual — Fast Cireng</title>
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#3D1F0E" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" href="assets/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin">
+
+  <!-- ============ PIN GATE ============ -->
+  <section class="gate" id="gate">
+    <div class="gate-card">
+      <img src="assets/logo.png" alt="Logo Fast Cireng" />
+      <h1>Dashboard Penjual</h1>
+      <p>Masukkan PIN untuk melihat ringkasan orderan.</p>
+      <form id="pinForm" autocomplete="off">
+        <input type="password" id="pinInput" inputmode="numeric" placeholder="PIN" maxlength="12" aria-label="PIN" />
+        <button class="btn btn-primary btn-lg" type="submit">Masuk</button>
+      </form>
+      <p class="gate-err" id="pinErr" role="alert"></p>
+      <a href="./" class="link-btn">← Kembali ke toko</a>
+    </div>
+  </section>
+
+  <div class="dash" id="dash" hidden>
+    <!-- ============ HEADER ============ -->
+    <header class="dash-head">
+      <div class="dash-brand">
+        <img src="assets/logo.png" alt="" />
+        <div>
+          <h1>Dashboard Penjual</h1>
+          <p id="dashSub">Ringkasan orderan Fast Cireng</p>
+        </div>
+      </div>
+      <div class="dash-head-act">
+        <a href="./" class="btn btn-outline btn-sm">Buka Toko</a>
+        <button class="btn btn-outline btn-sm" id="lockBtn">Kunci</button>
+      </div>
+    </header>
+
+    <!-- ============ ADD ORDERS ============ -->
+    <section class="add-row">
+      <button class="btn btn-wa" id="pasteBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="3" width="8" height="4" rx="1"/><path d="M16 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/></svg>
+        Tempel Pesanan dari WA
+      </button>
+      <button class="btn btn-primary" id="manualBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        Input Manual
+      </button>
+    </section>
+
+    <!-- ============ FILTER ============ -->
+    <div class="filters" role="tablist" aria-label="Periode">
+      <button data-range="today" class="active">Hari ini</button>
+      <button data-range="7">7 hari</button>
+      <button data-range="30">30 hari</button>
+      <button data-range="all">Semua</button>
+    </div>
+
+    <div id="dashEmpty" class="dash-empty" hidden>
+      <div class="empty-ico">📊</div>
+      <h3>Belum ada data orderan</h3>
+      <p>Setiap pesanan masuk ke WhatsApp, tekan lama pesannya → <b>Salin</b>, lalu tekan <b>Tempel Pesanan dari WA</b> di atas. Pesanan langsung tercatat dan grafiknya terisi otomatis.</p>
+      <button class="btn btn-outline btn-sm" id="demoBtn">Coba dengan data contoh</button>
+    </div>
+
+    <div id="dashBody">
+      <!-- ============ STATS ============ -->
+      <section class="stats">
+        <div class="stat hero">
+          <span class="stat-label">Omzet</span>
+          <strong class="stat-value" id="sRevenue">Rp0</strong>
+          <span class="stat-delta" id="sRevenueDelta"></span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Pesanan</span>
+          <strong class="stat-value" id="sOrders">0</strong>
+          <span class="stat-delta" id="sOrdersDelta"></span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Rata-rata</span>
+          <strong class="stat-value" id="sAvg">Rp0</strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Porsi terjual</span>
+          <strong class="stat-value" id="sQty">0</strong>
+        </div>
+      </section>
+
+      <div class="status-row" id="statusRow"></div>
+
+      <!-- ============ CHARTS ============ -->
+      <section class="charts">
+        <article class="chart-card wide">
+          <header>
+            <h3 id="trendTitle">Omzet per hari</h3>
+            <p id="trendSub">Pesanan batal tidak dihitung</p>
+          </header>
+          <div class="chart" id="trendChart"></div>
+        </article>
+
+        <article class="chart-card">
+          <header><h3>Menu terlaris</h3><p>Jumlah porsi terjual</p></header>
+          <div class="hbars" id="menuChart"></div>
+        </article>
+
+        <article class="chart-card">
+          <header><h3>Jam ramai</h3><p>Jumlah pesanan per jam</p></header>
+          <div class="chart" id="hourChart"></div>
+        </article>
+
+        <article class="chart-card">
+          <header><h3>Cara terima &amp; pembayaran</h3><p>Proporsi pesanan</p></header>
+          <div class="share" id="methodShare"></div>
+          <div class="share" id="payShare"></div>
+        </article>
+
+        <article class="chart-card">
+          <header><h3>Pelanggan teratas</h3><p>Berdasarkan total belanja</p></header>
+          <ol class="top-cust" id="topCust"></ol>
+        </article>
+      </section>
+
+      <!-- ============ ORDERS ============ -->
+      <section class="orders">
+        <div class="orders-head">
+          <h3>Daftar Pesanan <span id="orderCount"></span></h3>
+          <div class="orders-tools">
+            <select id="statusFilter" aria-label="Filter status">
+              <option value="">Semua status</option>
+              <option value="baru">Baru</option>
+              <option value="proses">Diproses</option>
+              <option value="selesai">Selesai</option>
+              <option value="batal">Batal</option>
+            </select>
+            <input type="search" id="orderSearch" placeholder="Cari nama / no. order" />
+          </div>
+        </div>
+        <ul class="order-list" id="orderList"></ul>
+      </section>
+    </div>
+
+    <!-- ============ DATA TOOLS ============ -->
+    <section class="card tools">
+      <h4 class="card-title">Data &amp; Cadangan</h4>
+      <p class="tools-note">Data tersimpan di perangkat ini saja. Rutin unduh cadangan, atau pindahkan ke HP lain lewat <b>Pulihkan</b>.</p>
+      <div class="tools-btns">
+        <button class="btn btn-outline btn-sm" id="csvBtn">Unduh Excel (CSV)</button>
+        <button class="btn btn-outline btn-sm" id="backupBtn">Unduh Cadangan</button>
+        <label class="btn btn-outline btn-sm">Pulihkan Cadangan<input type="file" id="restoreInput" accept="application/json,.json" hidden /></label>
+        <button class="btn btn-outline btn-sm danger" id="wipeBtn">Hapus Semua Data</button>
+      </div>
+    </section>
+    <p class="foot">Fast Cireng · Dashboard Penjual</p>
+  </div>
+
+  <!-- ============ PASTE SHEET ============ -->
+  <div class="sheet-backdrop" id="backdrop" hidden></div>
+  <section class="sheet small" id="pasteSheet" role="dialog" aria-modal="true" aria-labelledby="pasteTitle" hidden>
+    <h2 class="sheet-title" id="pasteTitle">Tempel Pesanan dari WhatsApp</h2>
+    <p class="sheet-note">Di WhatsApp, tekan lama pesan pesanan → <b>Salin</b>, lalu tempel di sini. Bisa beberapa pesanan sekaligus.</p>
+    <textarea id="pasteInput" rows="9" placeholder="*PESANAN BARU — FAST CIRENG*&#10;No. Order: *FC-...*&#10;..."></textarea>
+    <p class="paste-preview" id="pastePreview"></p>
+    <div class="sheet-actions">
+      <button class="btn btn-outline" type="button" data-close>Batal</button>
+      <button class="btn btn-outline" type="button" id="clipBtn">Tempel</button>
+      <button class="btn btn-primary grow" type="button" id="importBtn" disabled>Simpan</button>
+    </div>
+  </section>
+
+  <!-- ============ MANUAL SHEET ============ -->
+  <section class="sheet small" id="manualSheet" role="dialog" aria-modal="true" aria-labelledby="manualTitle" hidden>
+    <h2 class="sheet-title" id="manualTitle">Input Pesanan Manual</h2>
+    <p class="sheet-note">Untuk pesanan lewat telepon, datang langsung, atau chat biasa.</p>
+    <ul class="m-menu" id="mMenu"></ul>
+    <div class="m-grid">
+      <label class="field"><span>Nama pembeli</span><input type="text" id="mName" placeholder="Nama" /></label>
+      <label class="field"><span>No. WA <em>(opsional)</em></span><input type="tel" id="mPhone" placeholder="08xxxxxxxxxx" inputmode="tel" /></label>
+    </div>
+    <div class="seg" id="mMethod">
+      <label><input type="radio" name="mMethod" value="delivery" checked /><span>🛵 Diantar</span></label>
+      <label><input type="radio" name="mMethod" value="pickup" /><span>🏪 Ambil Sendiri</span></label>
+    </div>
+    <label class="field m-pay"><span>Pembayaran</span><select id="mPay"></select></label>
+    <div class="m-total"><span>Total</span><strong id="mTotal">Rp0</strong></div>
+    <div class="sheet-actions">
+      <button class="btn btn-outline" type="button" data-close>Batal</button>
+      <button class="btn btn-primary grow" type="button" id="mSave" disabled>Simpan Pesanan</button>
+    </div>
+  </section>
+
+  <div class="tooltip" id="tooltip" role="status" hidden></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="config.js"></script>
+  <script src="orders.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
