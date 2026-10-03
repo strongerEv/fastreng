@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Fast Cireng — Delivery Order Cireng</title>
+  <meta name="description" content="Fastreng: pesan cireng crispy favoritmu, langsung kirim pesanan ke WhatsApp penjual." />
+  <meta name="theme-color" content="#FF6A1A" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" href="assets/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- ============ SPLASH / ONBOARDING ============ -->
+    <section class="splash" id="splash" aria-label="Selamat datang">
+      <div class="splash-hero">
+        <div class="splash-blob"></div>
+        <img src="assets/logo.png" alt="Logo Fast Cireng" class="splash-logo" />
+      </div>
+      <div class="splash-body">
+        <h1>Cireng <span class="hl">Tercepat</span><br />Antar <span class="hl">Langsung</span> ke Kamu</h1>
+        <p>Pilih cireng favoritmu, masukin keranjang, dan pesanan langsung terkirim rapi ke WhatsApp penjual. Gampang, cepat, anti ribet!</p>
+        <div class="dots"><span class="on"></span><span></span><span></span></div>
+        <button class="btn btn-primary btn-lg" id="startBtn">Mulai Pesan</button>
+      </div>
+    </section>
+
+    <!-- ============ TOP BAR ============ -->
+    <header class="topbar" id="topbar">
+      <button class="loc" id="locBtn" aria-label="Ubah alamat pengiriman">
+        <span class="loc-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></svg>
+        </span>
+        <span class="loc-text">
+          <small>Kirim ke</small>
+          <strong id="locLabel">Atur alamat pengiriman</strong>
+        </span>
+        <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <a href="#cart" class="icon-btn cart-icon" id="cartIcon" aria-label="Keranjang">
+        <svg viewBox="0 0 24 24"><path d="M6 6h15l-1.6 8.2a2 2 0 0 1-2 1.6H9.2a2 2 0 0 1-2-1.6L5 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
+        <span class="badge" id="cartBadge" hidden>0</span>
+      </a>
+    </header>
+
+    <main class="views">
+
+      <!-- ============ HOME ============ -->
+      <section class="view" data-view="home" id="view-home">
+        <div class="greet">
+          <p id="greetText">Halo! 👋</p>
+          <h2>Mau ngemil cireng apa hari ini?</h2>
+        </div>
+
+        <div class="search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="searchInput" placeholder="Cari cireng..." autocomplete="off" />
+          <span class="store-status" id="storeStatus"></span>
+        </div>
+
+        <div class="promo">
+          <div class="promo-text">
+            <span class="promo-chip">PROMO</span>
+            <h3 id="promoTitle">Gratis Ongkir</h3>
+            <p id="promoText">Belanja min. Rp75.000</p>
+            <button class="btn btn-light btn-sm" id="promoBtn">Klaim Promo</button>
+          </div>
+          <img src="assets/menu/original-rujak.jpg" alt="" class="promo-img" />
+        </div>
+
+        <div class="section-head">
+          <h3>Kategori</h3>
+        </div>
+        <div class="cats" id="cats" role="tablist"></div>
+
+        <div class="section-head">
+          <h3 id="menuTitle">Menu Cireng</h3>
+          <span class="hint">Tap foto = +1 🛒</span>
+        </div>
+        <div class="grid" id="menuGrid"></div>
+        <p class="empty-note" id="menuEmpty" hidden>Menu tidak ditemukan 🥲</p>
+      </section>
+
+      <!-- ============ FAVORIT ============ -->
+      <section class="view" data-view="fav" id="view-fav" hidden>
+        <div class="page-head"><h2>Favorit Kamu</h2><p>Menu yang kamu tandai ❤️</p></div>
+        <div class="grid" id="favGrid"></div>
+        <div class="empty" id="favEmpty">
+          <div class="empty-ico">💛</div>
+          <h3>Belum ada favorit</h3>
+          <p>Tap ikon hati di menu untuk menyimpannya di sini.</p>
+          <a href="#home" class="btn btn-primary">Lihat Menu</a>
+        </div>
+      </section>
+
+      <!-- ============ KERANJANG / CHECKOUT ============ -->
+      <section class="view" data-view="cart" id="view-cart" hidden>
+        <div class="page-head"><h2>Keranjang</h2><p id="cartSub">Cek lagi pesananmu ya</p></div>
+
+        <div class="empty" id="cartEmpty">
+          <div class="empty-ico">🛒</div>
+          <h3>Keranjang masih kosong</h3>
+          <p>Yuk pilih cireng favoritmu dulu. Tinggal tap fotonya aja!</p>
+          <a href="#home" class="btn btn-primary">Pilih Cireng</a>
+        </div>
+
+        <div id="cartFilled" hidden>
+          <ul class="cart-list" id="cartList"></ul>
+          <button class="link-btn" id="clearCart">Kosongkan keranjang</button>
+
+          <form id="checkoutForm" novalidate>
+            <div class="card">
+              <h4 class="card-title">Cara Terima Pesanan</h4>
+              <div class="seg" id="methodSeg">
+                <label><input type="radio" name="method" value="delivery" checked /><span>🛵 Diantar</span></label>
+                <label><input type="radio" name="method" value="pickup" /><span>🏪 Ambil Sendiri</span></label>
+              </div>
+            </div>
+
+            <div class="card">
+              <h4 class="card-title">Data Pemesan</h4>
+              <label class="field">
+                <span>Nama</span>
+                <input type="text" name="name" id="fName" placeholder="Nama kamu" autocomplete="name" required />
+              </label>
+              <label class="field">
+                <span>No. WhatsApp</span>
+                <input type="tel" name="phone" id="fPhone" placeholder="08xxxxxxxxxx" autocomplete="tel" inputmode="tel" required />
+              </label>
+              <div id="addrFields">
+                <label class="field">
+                  <span>Alamat Lengkap</span>
+                  <textarea name="address" id="fAddress" rows="2" placeholder="Nama jalan, no. rumah, RT/RW, kelurahan" autocomplete="street-address" required></textarea>
+                </label>
+                <label class="field">
+                  <span>Patokan <em>(opsional)</em></span>
+                  <input type="text" name="landmark" id="fLandmark" placeholder="Contoh: pagar hitam depan masjid" />
+                </label>
+                <button type="button" class="btn btn-outline btn-sm" id="geoBtn">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7"/></svg>
+                  <span id="geoLabel">Bagikan lokasi saya (Maps)</span>
+                </button>
+              </div>
+              <div id="pickupInfo" class="pickup-info" hidden></div>
+              <label class="field">
+                <span>Catatan untuk penjual <em>(opsional)</em></span>
+                <textarea name="note" id="fNote" rows="2" placeholder="Contoh: sambal dipisah, jangan terlalu pedas"></textarea>
+              </label>
+            </div>
+
+            <div class="card">
+              <h4 class="card-title">Metode Pembayaran</h4>
+              <div class="pay-list" id="payList"></div>
+            </div>
+
+            <div class="card">
+              <h4 class="card-title">Kode Promo</h4>
+              <div class="promo-input">
+                <input type="text" id="promoInput" placeholder="Masukkan kode promo" autocapitalize="characters" />
+                <button type="button" class="btn btn-dark btn-sm" id="applyPromo">Pakai</button>
+              </div>
+              <p class="promo-msg" id="promoMsg"></p>
+            </div>
+
+            <div class="card summary">
+              <h4 class="card-title">Ringkasan Pembayaran</h4>
+              <div class="row"><span>Subtotal (<b id="sumQty">0</b> item)</span><span id="sumSubtotal">Rp0</span></div>
+              <div class="row"><span>Ongkos kirim</span><span id="sumShip">Rp0</span></div>
+              <div class="row discount" id="sumDiscRow" hidden><span>Diskon <b id="sumDiscCode"></b></span><span id="sumDisc">-Rp0</span></div>
+              <p class="ship-hint" id="shipHint"></p>
+              <div class="row total"><span>Total Bayar</span><span id="sumTotal">Rp0</span></div>
+            </div>
+
+            <div class="checkout-spacer"></div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ============ PROFIL / INFO ============ -->
+      <section class="view" data-view="profile" id="view-profile" hidden>
+        <div class="profile-hero">
+          <img src="assets/logo.png" alt="" />
+          <div>
+            <h2 id="storeName">Fast Cireng</h2>
+            <p id="storeTagline"></p>
+            <span class="store-status" id="storeStatus2"></span>
+          </div>
+        </div>
+
+        <div class="card info-list">
+          <div><span>📍</span><p id="infoAddr"></p></div>
+          <div><span>⏰</span><p id="infoHours"></p></div>
+          <div><span>🛵</span><p id="infoShip"></p></div>
+          <div><span>💬</span><p><a id="infoWa" target="_blank" rel="noopener">Chat penjual via WhatsApp</a></p></div>
+        </div>
+
+        <div class="section-head"><h3>Riwayat Pesanan</h3><button class="link-btn" id="clearHistory" hidden>Hapus</button></div>
+        <ul class="history" id="historyList"></ul>
+        <div class="empty small" id="historyEmpty">
+          <p>Belum ada pesanan. Pesanan yang kamu kirim ke WhatsApp akan tercatat di sini.</p>
+        </div>
+
+        <div class="card how">
+          <h4 class="card-title">Cara Pesan</h4>
+          <ol>
+            <li><b>Tap foto cireng</b> untuk menambah 1 porsi. Tap lagi = tambah lagi.</li>
+            <li>Atur jumlah dengan tombol <b>−</b> / <b>+</b> kapan saja.</li>
+            <li>Buka <b>Keranjang</b>, isi nama &amp; alamat, pilih pembayaran.</li>
+            <li>Tekan <b>Pesan via WhatsApp</b> — daftar belanja rapi + total harga langsung terkirim ke penjual.</li>
+          </ol>
+        </div>
+        <p class="foot">© <span id="year"></span> Fast Cireng · Fastreng App</p>
+      </section>
+    </main>
+
+    <!-- ============ FLOATING CART BAR ============ -->
+    <a href="#cart" class="cart-bar" id="cartBar" hidden>
+      <span class="cart-bar-qty" id="cartBarQty">0</span>
+      <span class="cart-bar-text">
+        <small>Total sementara</small>
+        <strong id="cartBarTotal">Rp0</strong>
+      </span>
+      <span class="cart-bar-cta">Lihat Keranjang
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+      </span>
+    </a>
+
+    <!-- ============ CHECKOUT BAR ============ -->
+    <div class="checkout-bar" id="checkoutBar" hidden>
+      <div>
+        <small>Total Bayar</small>
+        <strong id="checkoutTotal">Rp0</strong>
+      </div>
+      <button class="btn btn-wa" id="sendWa" type="button">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.7a10.7 10.7 0 0 1-5.5-1.5l-.4-.2-3.9 1 1-3.8-.2-.4A10.7 10.7 0 1 1 16 26.7zm5.9-8c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.8a.6.6 0 0 0 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7 6.3 6.3 0 0 0 1.3 3.3 14.4 14.4 0 0 0 5.5 4.9c2 .9 2.9 1 3.9.8a3.3 3.3 0 0 0 2.2-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.2-.3-.3-.6-.4z"/></svg>
+        Pesan via WhatsApp
+      </button>
+    </div>
+
+    <!-- ============ BOTTOM NAV ============ -->
+    <nav class="bottom-nav" id="bottomNav" aria-label="Navigasi utama">
+      <a href="#home" data-nav="home" class="active">
+        <svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7v8a2 2 0 0 1-2 2h-4v-6H9v6H5a2 2 0 0 1-2-2z"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="#fav" data-nav="fav">
+        <svg viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-9.2-9.3A5 5 0 0 1 12 6.6a5 5 0 0 1 9.2 4.1C19.5 15.4 12 20 12 20z"/></svg>
+        <span>Favorit</span>
+      </a>
+      <a href="#cart" data-nav="cart">
+        <svg viewBox="0 0 24 24"><path d="M6 6h15l-1.6 8.2a2 2 0 0 1-2 1.6H9.2a2 2 0 0 1-2-1.6L5 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
+        <span>Keranjang</span>
+        <i class="nav-badge" id="navBadge" hidden>0</i>
+      </a>
+      <a href="#profile" data-nav="profile">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+        <span>Info</span>
+      </a>
+    </nav>
+
+    <!-- ============ DETAIL SHEET ============ -->
+    <div class="sheet-backdrop" id="sheetBackdrop" hidden></div>
+    <section class="sheet" id="detailSheet" role="dialog" aria-modal="true" aria-labelledby="dName" hidden>
+      <div class="sheet-media">
+        <img id="dImg" src="" alt="" />
+        <button class="round-btn back" id="dClose" aria-label="Tutup">
+          <svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg>
+        </button>
+        <button class="round-btn fav" id="dFav" aria-label="Favorit">
+          <svg viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-9.2-9.3A5 5 0 0 1 12 6.6a5 5 0 0 1 9.2 4.1C19.5 15.4 12 20 12 20z"/></svg>
+        </button>
+      </div>
+      <div class="sheet-body">
+        <div class="d-meta">
+          <span class="d-badge" id="dBadge"></span>
+          <span class="rating">★ <b id="dRating"></b> · <span id="dSold"></span> terjual</span>
+        </div>
+        <div class="d-title">
+          <h2 id="dName"></h2>
+          <span class="d-price" id="dPrice"></span>
+        </div>
+        <p class="d-unit" id="dUnit"></p>
+        <p class="d-desc" id="dDesc"></p>
+        <div class="d-time">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          Estimasi antar: <b id="dEta"></b>
+        </div>
+        <div class="d-actions">
+          <div class="stepper big">
+            <button type="button" data-d="-1" aria-label="Kurangi">−</button>
+            <output id="dQty">1</output>
+            <button type="button" data-d="1" aria-label="Tambah">+</button>
+          </div>
+          <button class="btn btn-primary grow" id="dAdd">Tambah · <span id="dTotal"></span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ORDER SENT DIALOG ============ -->
+    <section class="sheet small" id="doneSheet" role="dialog" aria-modal="true" aria-labelledby="doneTitle" hidden>
+      <div class="done">
+        <div class="done-ico">✅</div>
+        <h2 id="doneTitle">Pesanan Siap Dikirim!</h2>
+        <p>WhatsApp penjual sudah dibuka dengan daftar pesananmu. Tinggal tekan <b>Kirim</b> di WhatsApp ya.</p>
+        <p class="done-id">No. Order: <b id="doneId"></b></p>
+        <a class="btn btn-wa" id="doneReopen" target="_blank" rel="noopener">Buka WhatsApp lagi</a>
+        <button class="btn btn-outline" id="doneNew">Pesan Baru (kosongkan keranjang)</button>
+        <button class="link-btn" id="doneKeep">Tutup, simpan keranjang</button>
+      </div>
+    </section>
+
+    <!-- ============ ADDRESS SHEET ============ -->
+    <section class="sheet small" id="addrSheet" role="dialog" aria-modal="true" aria-labelledby="addrTitle" hidden>
+      <h2 class="sheet-title" id="addrTitle">Alamat Pengiriman</h2>
+      <label class="field">
+        <span>Alamat Lengkap</span>
+        <textarea id="aAddress" rows="3" placeholder="Nama jalan, no. rumah, RT/RW, kelurahan"></textarea>
+      </label>
+      <label class="field">
+        <span>Patokan <em>(opsional)</em></span>
+        <input type="text" id="aLandmark" placeholder="Contoh: pagar hitam depan masjid" />
+      </label>
+      <div class="sheet-actions">
+        <button class="btn btn-outline" id="aCancel" type="button">Batal</button>
+        <button class="btn btn-primary grow" id="aSave" type="button">Simpan Alamat</button>
+      </div>
+    </section>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

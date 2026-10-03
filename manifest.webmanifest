@@ -1,0 +1,16 @@
+{
+  "name": "Fast Cireng — Delivery Order",
+  "short_name": "Fastreng",
+  "description": "Pesan cireng crispy, pesanan langsung terkirim ke WhatsApp penjual.",
+  "start_url": "./#home",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFAF6",
+  "theme_color": "#FF6A1A",
+  "lang": "id",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
